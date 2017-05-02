@@ -15,10 +15,14 @@ MongoClient.connect('mongodb://ryan:dbpassword@ds127731.mlab.com:27731/star-wars
 
 app.use(bodyParser.urlencoded({extended: true}))
 
-
+app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/index.html')
+	db.collection('quotes').find().toArray(function(err, result) {
+		if (err) return console.log(err)
+		// renders index.ejs
+		res.render('index.ejs', {quotes: result})
+	})
 })
 
 app.post('/quotes', (req, res) => {
